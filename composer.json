@@ -10,7 +10,7 @@
     "fabpot/php-cs-fixer": "2.0.*@dev",
     "fzaninotto/faker": "^1.5",
     "phpunit/phpunit": "^4.8",
-    "refinery29/php-cs-fixer-config": "^0.2.3",
+    "refinery29/php-cs-fixer-config": "0.2.8",
     "refinery29/test-util": "^0.2.0"
   },
   "license": "proprietary",
