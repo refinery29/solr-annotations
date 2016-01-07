@@ -1,0 +1,34 @@
+{
+  "name": "refinery29/solr-annotations",
+  "description": "Annotations for Solr",
+  "require": {
+    "beberlei/assert": "^2.3@dev",
+    "doctrine/annotations": "^1.3@dev"
+  },
+  "require-dev": {
+    "codeclimate/php-test-reporter": "^0.2.0",
+    "fabpot/php-cs-fixer": "2.0.*@dev",
+    "fzaninotto/faker": "^1.5",
+    "phpunit/phpunit": "^4.8",
+    "refinery29/php-cs-fixer-config": "^0.2.3",
+    "refinery29/test-util": "^0.2.0"
+  },
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Kayla Daniels",
+      "email": "kayladnls@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "Refinery29\\SolrAnnotations\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Refinery29\\SolrAnnotations\\Test\\": "test/"
+    }
+  }
+}

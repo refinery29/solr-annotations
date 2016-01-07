@@ -1,0 +1,45 @@
+language: php
+
+sudo: false
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 5.5
+    - php: 5.6
+      env: COLLECT_COVERAGE=true
+      env: CHECK_CS=true
+    - php: 7
+    - php: hhvm
+  allow_failures:
+    - php: 7
+    - php: hhvm
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - $HOME/.php-cs-fixer
+
+before_install:
+  - composer self-update
+  - composer validate
+  - composer config github-oauth.github.com $GITHUB_TOKEN
+
+install:
+  - composer install --prefer-dist
+
+before_script:
+  - if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_BRANCH" == "master" ]]; then IS_MERGE_TO_MASTER=true; else IS_MERGE_TO_MASTER=false; fi
+  - mkdir -p "$HOME/.php-cs-fixer"
+
+script:
+  - if [[ "$COLLECT_COVERAGE" == "true" && "$IS_MERGE_TO_MASTER" == "true" ]]; then vendor/bin/phpunit --configuration test/Unit/phpunit.xml --coverage-clover build/logs/clover.xml; else vendor/bin/phpunit --configuration test/Unit/phpunit.xml; fi
+  - vendor/bin/php-cs-fixer fix --config-file=.php_cs --verbose --diff --dry-run
+
+after_success:
+  - if [[ "$COLLECT_COVERAGE" == "true" && "$IS_MERGE_TO_MASTER" == "true" ]]; then vendor/bin/test-reporter; fi
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
