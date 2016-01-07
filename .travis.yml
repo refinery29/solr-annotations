@@ -2,13 +2,18 @@ language: php
 
 sudo: false
 
+env:
+  global:
+    - secure: "Uz3Q+A0/JCqZ8mNDEiJF+PN8Ub6kdbccErS2599G0qDO7MJmvOMIj62P8qNlUnT5917Ykqzk3Aikk+Idn9+JNxhzxaa2O0/Od2XUmjqeoRopxP2ZJtpgXMBwIAmC3v+1RIPF0dxa5XppTGXzRc2daoZwSLDWRhIAx0KYZiJ70KP1sDl49+3/OYi5cKLWqwlXSxpWg7YOGvyrmMkhO8kGwBpLSq35vWXDKy6XUg61wayUvPS5IRNhm9KcbcBSZ90SNF/zZmLPH3QXbL6JRrCiXxkeJCBLvMPRVk/TwQr8Mmcc1gUBrA09oDiBi7vBwVJO4Mke+pYm/FBPIn9kX+YutrOE7hSCMQRwEISQV+Tnieux7+FxnyZxKFF0RfhUUnUGT4X9x0hi4qDKzBmq3b9PjDgtt3cYNw+TyEjYPO6k+ykS6xAU7f2ToQb8DsiuTdnRwg9lOJWS1bTLBrCJmb6e5TRu3SWaGLSCRGLt7WOKvajYfpqe02BoEvSo3o3/YwZQGhtJjWFiWikzWkCCyHFsjyO7I3ZbF6Bc9K/wQKISmttXCWyfXa1LruVgmcPKpim/gCvkftc0AQ3RHESEpa+iLMSSh1ws1PHfgXlJkJGalXuXFSMVyEeBVE1aMfg/lb/cqAbGrWU2F2s2U1LR4iX7hhFClUtwtaE54q7taDvlLrA="
+    - secure: "Sx4Zk2w5nov4meGiA7BQxJ8Qq7m5D74apAuv+FclvkGlK083k2CSkwaQkOuvXmA9Y+l5JUQeGpaMDkR6/AdHkz8qvUcs3+1MhSISpBVT/GKHkd0WNkCyoiwTPSVJU5a0J3WsHHbAP0lh4nlUKkYEO3vgZBeKufFdNvuRfI5G5WdVFNuuTMRASWdE5LxK383avUpe/KXL0FMaCKBRYQXGr5ewDDrYcXjGGhQs3avfTzMZcFppo7ERx3tDU02GVqcqxF21Vp2Ht3pkEfoWwu7fB8ug0gh9gN0iU2MXwTdnXGXfQIpnw7MEeId34ecUQvW5jGbWlvfz9A503ISLM4KTzPKOL/PvdxjvHqjaMLK/4KdGV3oBGVaShunYG1NzQA64iL74I8fk40zDIe2V/eh0BUTTWaRSfm+35pbd6NTsNALmL1kh8OMBOezM/Z0am8JZD73PY0gVzfw58rMLHe9efH9o6OBsh8mIJ43+JpX36ezSKaNELCJrUa84tMa4zy+c2Blx7cUDeEuzb8MfWGWNOSYWCJ4tL+18UO84qyNYTnIx8S5SHtR/FQEomFTKIdq6LquvFFjdYzMjUsuw7Js4YgkEsX5+IygdTwKM8aKM0Vael5/XEmJj2LiUBaOqlovF5+939tiP01DnbD4zU0P4sdXSlmSz9/MRaYVxXQv9w7I="
+
 matrix:
   fast_finish: true
   include:
     - php: 5.5
+      env: WITH_CS=true
     - php: 5.6
-      env: COLLECT_COVERAGE=true
-      env: CHECK_CS=true
+      env: WITH_COVERAGE=true
     - php: 7
     - php: hhvm
   allow_failures:
@@ -21,6 +26,8 @@ cache:
     - $HOME/.php-cs-fixer
 
 before_install:
+  - if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_BRANCH" == "master" ]]; then IS_MERGE_TO_MASTER=true; else IS_MERGE_TO_MASTER=false; fi
+  - if [[ "$WITH_COVERAGE" != "true" && "$IS_MERGE_TO_MASTER" == "false" && "$TRAVIS_PHP_VERSION" != "hhvm" ]]; then phpenv config-rm xdebug.ini; fi
   - composer self-update
   - composer validate
   - composer config github-oauth.github.com $GITHUB_TOKEN
@@ -29,15 +36,15 @@ install:
   - composer install --prefer-dist
 
 before_script:
-  - if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_BRANCH" == "master" ]]; then IS_MERGE_TO_MASTER=true; else IS_MERGE_TO_MASTER=false; fi
   - mkdir -p "$HOME/.php-cs-fixer"
+  - mkdir -p build/logs
 
 script:
-  - if [[ "$COLLECT_COVERAGE" == "true" && "$IS_MERGE_TO_MASTER" == "true" ]]; then vendor/bin/phpunit --configuration test/Unit/phpunit.xml --coverage-clover build/logs/clover.xml; else vendor/bin/phpunit --configuration test/Unit/phpunit.xml; fi
-  - vendor/bin/php-cs-fixer fix --config-file=.php_cs --verbose --diff --dry-run
+  - if [[ "$WITH_COVERAGE" == "true" && "$IS_MERGE_TO_MASTER" == "true" ]]; then vendor/bin/phpunit --configuration=test/Unit/phpunit.xml --coverage-clover=build/logs/clover.xml; else vendor/bin/phpunit --configuration=test/Unit/phpunit.xml; fi
+  - if [[ "$WITH_CS" == "true" ]]; then vendor/bin/php-cs-fixer fix --config-file=.php_cs --verbose --diff --dry-run; fi
 
 after_success:
-  - if [[ "$COLLECT_COVERAGE" == "true" && "$IS_MERGE_TO_MASTER" == "true" ]]; then vendor/bin/test-reporter; fi
+  - if [[ "$WITH_COVERAGE" == "true" && "$IS_MERGE_TO_MASTER" == "true" ]]; then vendor/bin/test-reporter --coverage-report=build/logs/clover.xml; fi
 
 notifications:
   email:
