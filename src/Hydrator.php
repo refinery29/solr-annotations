@@ -42,12 +42,23 @@ class Hydrator
 
         $propertyAnnotations = $this->parsePropertyAnnotations($reflClass);
 
-        $document = (array) json_decode($document);
+        $propertyTypes = $this->getPropertyType($reflClass);
+
+        $document = (array)json_decode($document);
+
         $hydrated = new $object();
 
         foreach ($document as $field => $value) {
+            if (is_array($value)) {
+                continue;
+            }
+
             if ($this->propertyCanBeSet($hydrated, $field, $propertyAnnotations)) {
-                $setter = $this->getSetterMethod($propertyAnnotations[$field]);
+                $field = $propertyAnnotations[$field];
+                $type = $propertyTypes[$field];
+                $value = $this->coerceValue($type, $value);
+                $setter = $this->getSetterMethod($field);
+
                 $hydrated->$setter($value);
             }
         }
@@ -64,6 +75,10 @@ class Hydrator
      */
     private function propertyCanBeSet($class, $property, $propertyAnnotations)
     {
+        if ($property == 'id') {
+            return false;
+        }
+
         if (array_key_exists($property, $propertyAnnotations)) {
             $setter = $this->getSetterMethod($propertyAnnotations[$property]);
             if (method_exists($class, $setter)) {
@@ -122,5 +137,71 @@ class Hydrator
         AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Field.php');
         AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Document.php');
         AnnotationRegistry::registerFile(__DIR__ . '/Annotation/ExtraSchema.php');
+    }
+
+    /**
+     * @param $property
+     * @return mixed
+     */
+    private function getPropertyType(\ReflectionClass $class)
+    {
+        $properties = $class->getProperties();
+
+        $propertyTypes = [];
+        foreach ($properties as $property) {
+
+            $propertyDoc = $property->getDocComment();
+            $propertyType = "string";
+
+            if (strpos($propertyDoc, "@var ") !== 0) {
+                $length = strlen($propertyDoc);
+                $varDefinition = substr($propertyDoc, strpos($propertyDoc, "@var"), $length - 1);
+
+                $propertyType = trim(trim($varDefinition, '@var\n/*'));
+            }
+
+            $propertyName = $property->getName();
+            $propertyTypes[$propertyName] = $propertyType ?: $propertyName;
+        }
+
+        return $propertyTypes;
+    }
+
+    public function toString($val)
+    {
+        return (string)$val;
+    }
+
+    public function toBool($val)
+    {
+        if ($val == 0) {
+            return false;
+        } elseif ($val == 1) {
+            return true;
+        }
+    }
+
+    public function toInt($val)
+    {
+        return (int)$val;
+    }
+
+    private function coerceValue($type, $value)
+    {
+        switch ($type) {
+            case "string":
+                $value = $this->toString($value);
+                break;
+            case "bool":
+                $value = $this->toBool($value);
+                break;
+            case "int":
+                $value = $this->toInt($value);
+                break;
+        };
+
+        return $value;
+
+
     }
 }
