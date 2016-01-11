@@ -39,19 +39,36 @@ class Hydrator
     public function hydrate($object, $document)
     {
         $reflClass = new ReflectionClass($object);
+
         $this->validateClassAnnotation($reflClass);
 
         $propertyAnnotations = $this->parsePropertyAnnotations($reflClass);
 
-        $propertyTypes = $this->getPropertyType($reflClass);
+        $propertyTypes = $this->getPropertyTypes($reflClass);
 
         $document = (array) json_decode($document);
 
-        $hydrated = new $object();
+        if ($reflClass->hasMethod('__construct')) {
+            $reflClass->getMethod('__construct')
+                ->setAccessible(true);
+        }
+
+        $hydrated = $reflClass->newInstanceWithoutConstructor();
 
         foreach ($document as $field => $value) {
             if (is_array($value)) {
-                continue;
+                $hydrated->$field = $value;
+            }
+
+            if ($field === 'id') {
+                $idValue = explode('_', $value);
+                $idValue = array_pop($idValue);
+                $id = $reflClass->getProperty('id');
+                $id->setAccessible(true);
+                $type = $propertyTypes[$field];
+                $idValue = $this->coerceValue($type, $idValue);
+
+                $id->setValue($hydrated, $idValue);
             }
 
             if ($this->propertyCanBeSet($hydrated, $field, $propertyAnnotations)) {
@@ -110,10 +127,12 @@ class Hydrator
         $propertyAnnotations = [];
         foreach ($properties as $property) {
             $annotationName = $this->reader
-                ->getPropertyAnnotation($property, Field::class)
-                ->getName();
+                ->getPropertyAnnotation($property, Field::class);
 
-            $propertyAnnotations[$property->getName()] = $annotationName;
+            if ($annotationName) {
+                $annotationName = $annotationName->getName();
+                $propertyAnnotations[$property->getName()] = $annotationName;
+            }
         }
 
         return array_flip($propertyAnnotations);
@@ -123,9 +142,12 @@ class Hydrator
      * @param ReflectionClass $class
      *
      * @throws \Exception
+     *
+     * @return mixed
      */
     private function validateClassAnnotation(ReflectionClass $class)
     {
+        /** @var DocumentAnnotation $classAnnotation */
         $classAnnotation = $this->reader->getClassAnnotation($class, DocumentAnnotation::class);
 
         if (empty($classAnnotation)) {
@@ -145,7 +167,7 @@ class Hydrator
      *
      * @return mixed
      */
-    private function getPropertyType(\ReflectionClass $class)
+    private function getPropertyTypes(\ReflectionClass $class)
     {
         $properties = $class->getProperties();
 
@@ -200,9 +222,11 @@ class Hydrator
                 $value = $this->toString($value);
                 break;
             case 'bool':
+            case 'boolean':
                 $value = $this->toBool($value);
                 break;
             case 'int':
+            case 'integer':
                 $value = $this->toInt($value);
                 break;
             default:

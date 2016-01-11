@@ -11,6 +11,7 @@ namespace Refinery29\SolrAnnotations\Test\Unit;
 
 use Refinery29\SolrAnnotations\Hydrator;
 use Refinery29\SolrAnnotations\Test\Unit\Stub\AnnotatedClass;
+use Refinery29\SolrAnnotations\Test\Unit\Stub\AnnotatedClassPrivateConstructor;
 use Refinery29\SolrAnnotations\Test\Unit\Stub\NonAnnotatedClass;
 use Refinery29\Test\Util\Faker\GeneratorTrait;
 use Refinery29\Test\Util\PHPUnit\BuildsMockTrait;
@@ -218,5 +219,68 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($annotatedClass->getEmail(), (string)$email);
         $this->assertSame($annotatedClass->getAge(), $age);
         $this->assertSame($annotatedClass->getHasSomething(), $hasSomething);
+    }
+
+    public function testItCanHydrateWithPrivateConstructor()
+    {
+        $faker = $this->getFaker();
+        $name = $faker->word;
+        $email = $faker->word;
+        $age = $faker->randomDigit;
+        $hasSomething = $faker->boolean();
+
+        $document = json_encode(
+            [
+                'name_s' => $name,
+                'age_i' => $age,
+                'email_s' => $email,
+                'title_s' => $faker->word,
+                'has_something_i' => $hasSomething,
+            ]
+        );
+
+        $hydrator = new Hydrator();
+
+        /** @var AnnotatedClass $annotatedClass */
+        $annotatedClass = $hydrator->hydrate(AnnotatedClassPrivateConstructor::class, $document);
+
+        $this->assertSame($annotatedClass->getName(), $name);
+        $this->assertSame($annotatedClass->getEmail(), (string)$email);
+        $this->assertSame($annotatedClass->getAge(), $age);
+        $this->assertSame($annotatedClass->getHasSomething(), $hasSomething);
+        $this->assertSame($annotatedClass->getHasSomething(), $hasSomething);
+    }
+
+    public function testItCanHydratePrivateId()
+    {
+        $faker = $this->getFaker();
+        $name = $faker->word;
+        $id = $faker->randomDigit;
+        $email = $faker->word;
+        $age = $faker->randomDigit;
+        $hasSomething = $faker->boolean();
+
+        $document = json_encode(
+            [
+                'id' => $id,
+                'name_s' => $name,
+                'age_i' => $age,
+                'email_s' => $email,
+                'title_s' => $faker->word,
+                'has_something_i' => $hasSomething,
+            ]
+        );
+
+        $hydrator = new Hydrator();
+
+        /** @var AnnotatedClassPrivateConstructor $annotatedClass */
+        $annotatedClass = $hydrator->hydrate(AnnotatedClassPrivateConstructor::class, $document);
+
+        $this->assertSame($annotatedClass->getName(), $name);
+        $this->assertSame($annotatedClass->getEmail(), (string)$email);
+        $this->assertSame($annotatedClass->getAge(), $age);
+        $this->assertSame($annotatedClass->getHasSomething(), $hasSomething);
+        $this->assertSame($annotatedClass->getHasSomething(), $hasSomething);
+        $this->assertSame($annotatedClass->getId(), $id);
     }
 }
