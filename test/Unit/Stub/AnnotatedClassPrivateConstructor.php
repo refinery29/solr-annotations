@@ -22,7 +22,6 @@ class AnnotatedClassPrivateConstructor
 {
     private function __construct()
     {
-
     }
 
     /** @Solr\Field(

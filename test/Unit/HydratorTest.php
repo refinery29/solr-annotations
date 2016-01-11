@@ -139,7 +139,7 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
         $faker = $this->getFaker();
         $name = $faker->word;
         $email = $faker->email;
-        $age = (string)$faker->randomDigit;
+        $age = (string) $faker->randomDigit;
         $hasSomething = $faker->boolean();
 
         $document = json_encode(
@@ -159,7 +159,7 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($annotatedClass->getName(), $name);
         $this->assertSame($annotatedClass->getEmail(), $email);
-        $this->assertSame($annotatedClass->getAge(), (int)$age);
+        $this->assertSame($annotatedClass->getAge(), (int) $age);
         $this->assertSame($annotatedClass->getHasSomething(), $hasSomething);
     }
 
@@ -186,7 +186,7 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
         /** @var AnnotatedClass $annotatedClass */
         $annotatedClass = $hydrator->hydrate(AnnotatedClass::class, $document);
 
-        $this->assertSame($annotatedClass->getName(), (string)$name);
+        $this->assertSame($annotatedClass->getName(), (string) $name);
         $this->assertSame($annotatedClass->getEmail(), $email);
         $this->assertSame($annotatedClass->getAge(), $age);
         $this->assertSame($annotatedClass->getHasSomething(), $hasSomething);
@@ -216,7 +216,7 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
         $annotatedClass = $hydrator->hydrate(AnnotatedClass::class, $document);
 
         $this->assertSame($annotatedClass->getName(), $name);
-        $this->assertSame($annotatedClass->getEmail(), (string)$email);
+        $this->assertSame($annotatedClass->getEmail(), (string) $email);
         $this->assertSame($annotatedClass->getAge(), $age);
         $this->assertSame($annotatedClass->getHasSomething(), $hasSomething);
     }
@@ -245,7 +245,7 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
         $annotatedClass = $hydrator->hydrate(AnnotatedClassPrivateConstructor::class, $document);
 
         $this->assertSame($annotatedClass->getName(), $name);
-        $this->assertSame($annotatedClass->getEmail(), (string)$email);
+        $this->assertSame($annotatedClass->getEmail(), (string) $email);
         $this->assertSame($annotatedClass->getAge(), $age);
         $this->assertSame($annotatedClass->getHasSomething(), $hasSomething);
         $this->assertSame($annotatedClass->getHasSomething(), $hasSomething);
@@ -277,7 +277,7 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
         $annotatedClass = $hydrator->hydrate(AnnotatedClassPrivateConstructor::class, $document);
 
         $this->assertSame($annotatedClass->getName(), $name);
-        $this->assertSame($annotatedClass->getEmail(), (string)$email);
+        $this->assertSame($annotatedClass->getEmail(), (string) $email);
         $this->assertSame($annotatedClass->getAge(), $age);
         $this->assertSame($annotatedClass->getHasSomething(), $hasSomething);
         $this->assertSame($annotatedClass->getHasSomething(), $hasSomething);
