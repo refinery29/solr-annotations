@@ -14,7 +14,6 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Refinery29\SolrAnnotations\Annotation\Document as DocumentAnnotation;
 use Refinery29\SolrAnnotations\Annotation\Field;
 use ReflectionClass;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 class Hydrator
 {
@@ -207,7 +206,7 @@ class Hydrator
             return true;
         }
 
-        throw new Exception('Invalid Boolean Value Provided');
+        throw new \Exception('Invalid Boolean Value Provided');
     }
 
     public function toInt($val)
