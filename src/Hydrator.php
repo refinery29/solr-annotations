@@ -14,6 +14,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Refinery29\SolrAnnotations\Annotation\Document as DocumentAnnotation;
 use Refinery29\SolrAnnotations\Annotation\Field;
 use ReflectionClass;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class Hydrator
 {
@@ -140,7 +141,7 @@ class Hydrator
     }
 
     /**
-     * @param $property
+     * @param ReflectionClass $class
      *
      * @return mixed
      */
@@ -153,7 +154,7 @@ class Hydrator
             $propertyDoc = $property->getDocComment();
             $propertyType = 'string';
 
-            if (strpos($propertyDoc, '@var ') !== 0) {
+            if (strpos($propertyDoc, '@var ') !== false) {
                 $length = strlen($propertyDoc);
                 $varDefinition = substr($propertyDoc, strpos($propertyDoc, '@var'), $length - 1);
 
@@ -161,7 +162,7 @@ class Hydrator
             }
 
             $propertyName = $property->getName();
-            $propertyTypes[$propertyName] = $propertyType ?: $propertyName;
+            $propertyTypes[$propertyName] = $propertyType;
         }
 
         return $propertyTypes;
@@ -174,11 +175,17 @@ class Hydrator
 
     public function toBool($val)
     {
-        if ($val == 0) {
+        if ($val === true || $val === false) {
+            return $val;
+        }
+
+        if ($val === 0) {
             return false;
-        } elseif ($val == 1) {
+        } elseif ($val === 1) {
             return true;
         }
+
+        throw new Exception('Invalid Boolean Value Provided');
     }
 
     public function toInt($val)
@@ -197,6 +204,9 @@ class Hydrator
                 break;
             case 'int':
                 $value = $this->toInt($value);
+                break;
+            default:
+                $value = $this->toString($value);
                 break;
         };
 

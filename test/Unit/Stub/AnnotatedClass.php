@@ -22,7 +22,10 @@ class AnnotatedClass
 {
     /** @Solr\Field(
      *      name="name_s"
-     * ) */
+     * )
+     *
+     * @var string
+     */
     private $name;
 
     /**
@@ -32,8 +35,17 @@ class AnnotatedClass
 
     /**
      * @Solr\Field(name="age_i")
+     *
+     * @var int
      */
     private $age;
+
+    /**
+     * @Solr\Field(name="has_something_i")
+     *
+     * @var bool
+     */
+    private $hasSomething;
 
     /**
      * @param mixed $name
@@ -60,7 +72,7 @@ class AnnotatedClass
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -81,5 +93,21 @@ class AnnotatedClass
     public function getAge()
     {
         return $this->age;
+    }
+
+    /**
+     * @param mixed $hasSomething
+     */
+    public function setHasSomething($hasSomething)
+    {
+        $this->hasSomething = $hasSomething;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHasSomething()
+    {
+        return $this->hasSomething;
     }
 }
