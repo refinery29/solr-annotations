@@ -44,7 +44,7 @@ class Hydrator
 
         $propertyTypes = $this->getPropertyType($reflClass);
 
-        $document = (array)json_decode($document);
+        $document = (array) json_decode($document);
 
         $hydrated = new $object();
 
@@ -141,6 +141,7 @@ class Hydrator
 
     /**
      * @param $property
+     *
      * @return mixed
      */
     private function getPropertyType(\ReflectionClass $class)
@@ -149,13 +150,12 @@ class Hydrator
 
         $propertyTypes = [];
         foreach ($properties as $property) {
-
             $propertyDoc = $property->getDocComment();
-            $propertyType = "string";
+            $propertyType = 'string';
 
-            if (strpos($propertyDoc, "@var ") !== 0) {
+            if (strpos($propertyDoc, '@var ') !== 0) {
                 $length = strlen($propertyDoc);
-                $varDefinition = substr($propertyDoc, strpos($propertyDoc, "@var"), $length - 1);
+                $varDefinition = substr($propertyDoc, strpos($propertyDoc, '@var'), $length - 1);
 
                 $propertyType = trim(trim($varDefinition, '@var\n/*'));
             }
@@ -169,7 +169,7 @@ class Hydrator
 
     public function toString($val)
     {
-        return (string)$val;
+        return (string) $val;
     }
 
     public function toBool($val)
@@ -183,25 +183,23 @@ class Hydrator
 
     public function toInt($val)
     {
-        return (int)$val;
+        return (int) $val;
     }
 
     private function coerceValue($type, $value)
     {
         switch ($type) {
-            case "string":
+            case 'string':
                 $value = $this->toString($value);
                 break;
-            case "bool":
+            case 'bool':
                 $value = $this->toBool($value);
                 break;
-            case "int":
+            case 'int':
                 $value = $this->toInt($value);
                 break;
         };
 
         return $value;
-
-
     }
 }
