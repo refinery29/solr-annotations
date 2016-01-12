@@ -22,9 +22,7 @@ class Hydrator
      */
     public function __construct(AnnotationReader $annotationReader = null)
     {
-        AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Field.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Document.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/Annotation/ExtraSchema.php');
+        self::registerAnnotations();
 
         $this->reader = $annotationReader ?: new AnnotationReader();
     }
@@ -117,5 +115,12 @@ class Hydrator
         if (empty($classAnnotation)) {
             throw new \Exception(DocumentAnnotation::class . ' is required');
         }
+    }
+
+    public static function registerAnnotations()
+    {
+        AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Field.php');
+        AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Document.php');
+        AnnotationRegistry::registerFile(__DIR__ . '/Annotation/ExtraSchema.php');
     }
 }
