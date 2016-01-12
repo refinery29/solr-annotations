@@ -18,8 +18,20 @@ use Refinery29\SolrAnnotations\Annotation as Solr;
  *      @Solr\Field(name="tags")
  * })
  */
-class AnnotatedClass
+class AnnotatedClassPrivateConstructor
 {
+    private function __construct()
+    {
+    }
+
+    /** @Solr\Field(
+     *      name="id"
+     * )
+     *
+     * @var int
+     */
+    private $id;
+
     /** @Solr\Field(
      *      name="name_s"
      * )
@@ -109,5 +121,13 @@ class AnnotatedClass
     public function getHasSomething()
     {
         return $this->hasSomething;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

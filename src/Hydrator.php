@@ -38,16 +38,44 @@ class Hydrator
     public function hydrate($object, $document)
     {
         $reflClass = new ReflectionClass($object);
+
         $this->validateClassAnnotation($reflClass);
 
         $propertyAnnotations = $this->parsePropertyAnnotations($reflClass);
 
+        $propertyTypes = $this->getPropertyTypes($reflClass);
+
         $document = (array) json_decode($document);
-        $hydrated = new $object();
+
+        if ($reflClass->hasMethod('__construct')) {
+            $reflClass->getMethod('__construct')
+                ->setAccessible(true);
+        }
+
+        $hydrated = $reflClass->newInstanceWithoutConstructor();
 
         foreach ($document as $field => $value) {
+            if (is_array($value)) {
+                $hydrated->$field = $value;
+            }
+
+            if ($field === 'id') {
+                $idValue = explode('_', $value);
+                $idValue = array_pop($idValue);
+                $id = $reflClass->getProperty('id');
+                $id->setAccessible(true);
+                $type = $propertyTypes[$field];
+                $idValue = $this->coerceValue($type, $idValue);
+
+                $id->setValue($hydrated, $idValue);
+            }
+
             if ($this->propertyCanBeSet($hydrated, $field, $propertyAnnotations)) {
-                $setter = $this->getSetterMethod($propertyAnnotations[$field]);
+                $field = $propertyAnnotations[$field];
+                $type = $propertyTypes[$field];
+                $value = $this->coerceValue($type, $value);
+                $setter = $this->getSetterMethod($field);
+
                 $hydrated->$setter($value);
             }
         }
@@ -64,6 +92,10 @@ class Hydrator
      */
     private function propertyCanBeSet($class, $property, $propertyAnnotations)
     {
+        if ($property == 'id') {
+            return false;
+        }
+
         if (array_key_exists($property, $propertyAnnotations)) {
             $setter = $this->getSetterMethod($propertyAnnotations[$property]);
             if (method_exists($class, $setter)) {
@@ -94,10 +126,12 @@ class Hydrator
         $propertyAnnotations = [];
         foreach ($properties as $property) {
             $annotationName = $this->reader
-                ->getPropertyAnnotation($property, Field::class)
-                ->getName();
+                ->getPropertyAnnotation($property, Field::class);
 
-            $propertyAnnotations[$property->getName()] = $annotationName;
+            if ($annotationName) {
+                $annotationName = $annotationName->getName();
+                $propertyAnnotations[$property->getName()] = $annotationName;
+            }
         }
 
         return array_flip($propertyAnnotations);
@@ -107,9 +141,12 @@ class Hydrator
      * @param ReflectionClass $class
      *
      * @throws \Exception
+     *
+     * @return mixed
      */
     private function validateClassAnnotation(ReflectionClass $class)
     {
+        /** @var DocumentAnnotation $classAnnotation */
         $classAnnotation = $this->reader->getClassAnnotation($class, DocumentAnnotation::class);
 
         if (empty($classAnnotation)) {
@@ -122,5 +159,80 @@ class Hydrator
         AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Field.php');
         AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Document.php');
         AnnotationRegistry::registerFile(__DIR__ . '/Annotation/ExtraSchema.php');
+    }
+
+    /**
+     * @param ReflectionClass $class
+     *
+     * @return mixed
+     */
+    private function getPropertyTypes(\ReflectionClass $class)
+    {
+        $properties = $class->getProperties();
+
+        $propertyTypes = [];
+        foreach ($properties as $property) {
+            $propertyDoc = $property->getDocComment();
+            $propertyType = 'string';
+
+            if (strpos($propertyDoc, '@var ') !== false) {
+                $length = strlen($propertyDoc);
+                $varDefinition = substr($propertyDoc, strpos($propertyDoc, '@var'), $length - 1);
+
+                $propertyType = trim(trim($varDefinition, '@var\n/*'));
+            }
+
+            $propertyName = $property->getName();
+            $propertyTypes[$propertyName] = $propertyType;
+        }
+
+        return $propertyTypes;
+    }
+
+    public function toString($val)
+    {
+        return (string) $val;
+    }
+
+    public function toBool($val)
+    {
+        if ($val === true || $val === false) {
+            return $val;
+        }
+
+        if ($val === 0) {
+            return false;
+        } elseif ($val === 1) {
+            return true;
+        }
+
+        throw new \Exception('Invalid Boolean Value Provided');
+    }
+
+    public function toInt($val)
+    {
+        return (int) $val;
+    }
+
+    private function coerceValue($type, $value)
+    {
+        switch ($type) {
+            case 'string':
+                $value = $this->toString($value);
+                break;
+            case 'bool':
+            case 'boolean':
+                $value = $this->toBool($value);
+                break;
+            case 'int':
+            case 'integer':
+                $value = $this->toInt($value);
+                break;
+            default:
+                $value = $this->toString($value);
+                break;
+        };
+
+        return $value;
     }
 }

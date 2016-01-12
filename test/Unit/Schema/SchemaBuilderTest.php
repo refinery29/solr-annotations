@@ -31,10 +31,11 @@ class SchemaBuilderTest extends \PHPUnit_Framework_TestCase
         /** @var Field[] $fields */
         $fields = $schema->getFields();
 
-        $this->assertCount(4, $fields);
+        $this->assertCount(5, $fields);
 
         $this->assertSame('name_s', $fields[0]->getName());
         $this->assertSame('email_s', $fields[1]->getName());
         $this->assertSame('age_i', $fields[2]->getName());
+        $this->assertSame('has_something_i', $fields[3]->getName());
     }
 }
