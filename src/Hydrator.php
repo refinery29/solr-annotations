@@ -9,22 +9,24 @@
 
 namespace Refinery29\SolrAnnotations;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Refinery29\SolrAnnotations\Annotation\Document as DocumentAnnotation;
-use Refinery29\SolrAnnotations\Annotation\Field;
+use Refinery29\SolrAnnotations\Annotation\Parser;
 use ReflectionClass;
 
 class Hydrator
 {
     /**
-     * @param AnnotationReader $annotationReader
+     * @var Parser
      */
-    public function __construct(AnnotationReader $annotationReader = null)
-    {
-        self::registerAnnotations();
+    private $parser;
 
-        $this->reader = $annotationReader ?: new AnnotationReader();
+    /**
+     * @param Parser $parser
+     *
+     * @internal param AnnotationReader $annotationReader
+     */
+    public function __construct(Parser $parser = null)
+    {
+        $this->parser = $parser ?: new Parser();
     }
 
     /**
@@ -39,11 +41,11 @@ class Hydrator
     {
         $reflClass = new ReflectionClass($object);
 
-        $this->validateClassAnnotation($reflClass);
+        $this->parser->validateClassAnnotation($reflClass);
 
-        $propertyAnnotations = $this->parsePropertyAnnotations($reflClass);
+        $propertyAnnotations = $this->parser->getProperties($reflClass);
 
-        $propertyTypes = $this->getPropertyTypes($reflClass);
+        $propertyTypes = $this->parser->getPropertyTypes($reflClass);
 
         $document = (array) json_decode($document);
 
@@ -115,85 +117,22 @@ class Hydrator
     }
 
     /**
-     * @param ReflectionClass $class
+     * @param $val
      *
-     * @return array
+     * @return string
      */
-    private function parsePropertyAnnotations(ReflectionClass $class)
-    {
-        $properties = $class->getProperties();
-
-        $propertyAnnotations = [];
-        foreach ($properties as $property) {
-            $annotationName = $this->reader
-                ->getPropertyAnnotation($property, Field::class);
-
-            if ($annotationName) {
-                $annotationName = $annotationName->getName();
-                $propertyAnnotations[$property->getName()] = $annotationName;
-            }
-        }
-
-        return array_flip($propertyAnnotations);
-    }
-
-    /**
-     * @param ReflectionClass $class
-     *
-     * @throws \Exception
-     *
-     * @return mixed
-     */
-    private function validateClassAnnotation(ReflectionClass $class)
-    {
-        /** @var DocumentAnnotation $classAnnotation */
-        $classAnnotation = $this->reader->getClassAnnotation($class, DocumentAnnotation::class);
-
-        if (empty($classAnnotation)) {
-            throw new \Exception(DocumentAnnotation::class . ' is required');
-        }
-    }
-
-    public static function registerAnnotations()
-    {
-        AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Field.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Document.php');
-        AnnotationRegistry::registerFile(__DIR__ . '/Annotation/ExtraSchema.php');
-    }
-
-    /**
-     * @param ReflectionClass $class
-     *
-     * @return mixed
-     */
-    private function getPropertyTypes(\ReflectionClass $class)
-    {
-        $properties = $class->getProperties();
-
-        $propertyTypes = [];
-        foreach ($properties as $property) {
-            $propertyDoc = $property->getDocComment();
-            $propertyType = 'string';
-
-            if (strpos($propertyDoc, '@var ') !== false) {
-                $length = strlen($propertyDoc);
-                $varDefinition = substr($propertyDoc, strpos($propertyDoc, '@var'), $length - 1);
-
-                $propertyType = trim(trim($varDefinition, '@var\n/*'));
-            }
-
-            $propertyName = $property->getName();
-            $propertyTypes[$propertyName] = $propertyType;
-        }
-
-        return $propertyTypes;
-    }
-
     public function toString($val)
     {
         return (string) $val;
     }
 
+    /**
+     * @param $val
+     *
+     * @throws \Exception
+     *
+     * @return bool
+     */
     public function toBool($val)
     {
         if ($val === true || $val === false) {
@@ -209,11 +148,24 @@ class Hydrator
         throw new \Exception('Invalid Boolean Value Provided');
     }
 
+    /**
+     * @param $val
+     *
+     * @return int
+     */
     public function toInt($val)
     {
         return (int) $val;
     }
 
+    /**
+     * @param $type
+     * @param $value
+     *
+     * @throws \Exception
+     *
+     * @return bool|int|string
+     */
     private function coerceValue($type, $value)
     {
         switch ($type) {

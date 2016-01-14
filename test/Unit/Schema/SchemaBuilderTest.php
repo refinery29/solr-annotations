@@ -9,6 +9,7 @@
 
 namespace Refinery29\SolrAnnotations\Test\Unit\Schema;
 
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Refinery29\SolrAnnotations\Annotation\Field;
 use Refinery29\SolrAnnotations\Schema\Schema;
 use Refinery29\SolrAnnotations\Schema\SchemaBuilder;
@@ -19,6 +20,11 @@ class SchemaBuilderTest extends \PHPUnit_Framework_TestCase
 {
     use GeneratorTrait;
 
+    public function setup()
+    {
+        AnnotationRegistry::registerAutoloadNamespace('Refinery29/SolrAnnotations/Annotation');
+    }
+
     public function testCanBuildSchema()
     {
         $builder = new SchemaBuilder();
@@ -28,14 +34,15 @@ class SchemaBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($schema->getName(), 'AnnotatedClassDocument');
 
-        /** @var Field[] $fields */
-        $fields = $schema->getFields();
+        /* @var Field[] $fields */
+        $fieldNames = array_keys($schema->getFields());
 
-        $this->assertCount(5, $fields);
+        $this->assertCount(5, $fieldNames);
 
-        $this->assertSame('name_s', $fields[0]->getName());
-        $this->assertSame('email_s', $fields[1]->getName());
-        $this->assertSame('age_i', $fields[2]->getName());
-        $this->assertSame('has_something_i', $fields[3]->getName());
+        $this->assertSame('name_s', array_shift($fieldNames));
+        $this->assertSame('email_s', array_shift($fieldNames));
+        $this->assertSame('age_i', array_shift($fieldNames));
+        $this->assertSame('has_something_i', array_shift($fieldNames));
+        $this->assertSame('tags', array_shift($fieldNames));
     }
 }
