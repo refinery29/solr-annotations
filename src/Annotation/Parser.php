@@ -13,6 +13,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Refinery29\SolrAnnotations\Annotation\Document as DocumentAnnotation;
 use ReflectionClass;
+
 /**
  * Given an annotated class the Parser reads over the file to determine available search fields,
  * document name, etc.
