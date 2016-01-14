@@ -34,9 +34,7 @@ class SchemaBuilder
         $reflClass = new ReflectionClass($object);
 
         $name = $this->parser->getDocumentName($reflClass);
-
-        $fields = $this->parser->getProperties($reflClass);
-        $fields = array_merge($fields, $this->parser->getExtraSchema($reflClass));
+        $fields = $this->parser->getAllSearchableFields($reflClass);
 
         return new Schema($name, $fields);
     }

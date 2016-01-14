@@ -134,6 +134,11 @@ class Parser
         return array_flip($returnFields);
     }
 
+    public function getAllSearchableFields(ReflectionClass $class)
+    {
+        return array_merge($this->getProperties($class), $this->getExtraSchema($class));
+    }
+
     /**
      *
      */
