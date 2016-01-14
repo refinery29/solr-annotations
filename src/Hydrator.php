@@ -199,10 +199,6 @@ class Hydrator
             $idValue = $this->coerceValue($type, $idValue);
 
             $id->setValue($hydrated, $idValue);
-
-            return $type;
         }
-
-        return $type;
     }
 }
