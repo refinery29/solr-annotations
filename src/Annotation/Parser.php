@@ -14,6 +14,10 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Refinery29\SolrAnnotations\Annotation\Document as DocumentAnnotation;
 use ReflectionClass;
 
+/**
+ * Given an annotated class the Parser reads over the file to determine available search fields,
+ * document name, etc.
+ */
 class Parser
 {
     /**
@@ -33,6 +37,9 @@ class Parser
     /**
      * @param ReflectionClass $class
      *
+     * Validates that the Document annotation is present. This is required for the
+     * Annotated class to be considered valid.
+     *
      * @throws \Exception
      *
      * @return mixed
@@ -51,6 +58,8 @@ class Parser
 
     /**
      * @param ReflectionClass $class
+     *
+     * Validates and returns the Document annotation on a class
      *
      * @throws \Exception
      *

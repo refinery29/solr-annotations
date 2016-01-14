@@ -61,16 +61,7 @@ class Hydrator
                 $hydrated->$field = $value;
             }
 
-            if ($field === 'id') {
-                $idValue = explode('_', $value);
-                $idValue = array_pop($idValue);
-                $id = $reflClass->getProperty('id');
-                $id->setAccessible(true);
-                $type = $propertyTypes[$field];
-                $idValue = $this->coerceValue($type, $idValue);
-
-                $id->setValue($hydrated, $idValue);
-            }
+            $this->setIdIfPresent($field, $value, $reflClass, $propertyTypes, $hydrated);
 
             if ($this->propertyCanBeSet($hydrated, $field, $propertyAnnotations)) {
                 $field = $propertyAnnotations[$field];
@@ -121,7 +112,7 @@ class Hydrator
      *
      * @return string
      */
-    public function toString($val)
+    private function toString($val)
     {
         return (string) $val;
     }
@@ -133,7 +124,7 @@ class Hydrator
      *
      * @return bool
      */
-    public function toBool($val)
+    private function toBool($val)
     {
         if ($val === true || $val === false) {
             return $val;
@@ -153,7 +144,7 @@ class Hydrator
      *
      * @return int
      */
-    public function toInt($val)
+    private function toInt($val)
     {
         return (int) $val;
     }
@@ -186,5 +177,28 @@ class Hydrator
         };
 
         return $value;
+    }
+
+    /**
+     * @param $field
+     * @param $value
+     * @param $reflClass
+     * @param $propertyTypes
+     * @param $hydrated
+     *
+     * @return mixed
+     */
+    private function setIdIfPresent($field, $value, $reflClass, $propertyTypes, $hydrated)
+    {
+        if ($field === 'id') {
+            $idValue = explode('_', $value);
+            $idValue = array_pop($idValue);
+            $id = $reflClass->getProperty('id');
+            $id->setAccessible(true);
+            $type = $propertyTypes[$field];
+            $idValue = $this->coerceValue($type, $idValue);
+
+            $id->setValue($hydrated, $idValue);
+        }
     }
 }
