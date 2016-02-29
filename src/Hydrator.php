@@ -30,16 +30,16 @@ class Hydrator
     }
 
     /**
-     * @param $object
+     * @param string $className
      * @param $document
      *
      * @throws \Exception
      *
      * @return mixed
      */
-    public function hydrate($object, $document)
+    public function hydrate($className, $document)
     {
-        $reflClass = new ReflectionClass($object);
+        $reflClass = new ReflectionClass($className);
 
         $this->parser->validateClassAnnotation($reflClass);
 
@@ -47,14 +47,19 @@ class Hydrator
 
         $propertyTypes = $this->parser->getPropertyTypes($reflClass);
 
-        $document = (array) json_decode($document);
-
-        if ($reflClass->hasMethod('__construct')) {
-            $reflClass->getMethod('__construct')
-                ->setAccessible(true);
+        if (is_string($document)) {
+            $document = (array) json_decode($document);
         }
 
         $hydrated = $reflClass->newInstanceWithoutConstructor();
+
+        $reflection = new \ReflectionObject($hydrated);
+
+        $constructor = $reflection->getConstructor();
+        if ($constructor) {
+            $constructor->setAccessible(true);
+            $constructor->invoke($hydrated);
+        }
 
         foreach ($document as $field => $value) {
             if (is_array($value)) {
