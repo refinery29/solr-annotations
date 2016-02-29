@@ -56,7 +56,7 @@ class Hydrator
         $reflection = new \ReflectionObject($hydrated);
 
         $constructor = $reflection->getConstructor();
-        if ($constructor){
+        if ($constructor) {
             $constructor->setAccessible(true);
             $constructor->invoke($hydrated);
         }
