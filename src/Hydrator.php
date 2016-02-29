@@ -47,7 +47,7 @@ class Hydrator
 
         $propertyTypes = $this->parser->getPropertyTypes($reflClass);
 
-        if (is_string($document)){
+        if (is_string($document)) {
             $document = (array) json_decode($document);
         }
 
