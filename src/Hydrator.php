@@ -56,8 +56,10 @@ class Hydrator
         $reflection = new \ReflectionObject($hydrated);
 
         $constructor = $reflection->getConstructor();
-        $constructor->setAccessible(true);
-        $constructor->invoke($hydrated);
+        if ($constructor){
+            $constructor->setAccessible(true);
+            $constructor->invoke($hydrated);
+        }
 
         foreach ($document as $field => $value) {
             if (is_array($value)) {
