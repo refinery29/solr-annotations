@@ -179,7 +179,7 @@ class Hydrator
             default:
                 $value = $this->toString($value);
                 break;
-        };
+        }
 
         return $value;
     }
