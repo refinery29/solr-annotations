@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ce31d500c2bb6c13c466ad0e4ec0ec33",
-    "content-hash": "fbb64b411f47336935c26e2a6f8646d4",
+    "hash": "81ad71bd1c2fdc5ec987a3366f347e52",
+    "content-hash": "8515e6ff4daf6f5c1273ef12188d1aa5",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1021,16 +1021,16 @@
         },
         {
             "name": "refinery29/php-cs-fixer-config",
-            "version": "0.4.15",
+            "version": "0.4.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/refinery29/php-cs-fixer-config.git",
-                "reference": "9d4e6b468ca0bce35515f189ca9a1ecc44375d25"
+                "reference": "7dd3a4117f69300ba1c7ef69e9738f1bc1fdb312"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/refinery29/php-cs-fixer-config/zipball/9d4e6b468ca0bce35515f189ca9a1ecc44375d25",
-                "reference": "9d4e6b468ca0bce35515f189ca9a1ecc44375d25",
+                "url": "https://api.github.com/repos/refinery29/php-cs-fixer-config/zipball/7dd3a4117f69300ba1c7ef69e9738f1bc1fdb312",
+                "reference": "7dd3a4117f69300ba1c7ef69e9738f1bc1fdb312",
                 "shasum": ""
             },
             "require": {
@@ -1058,7 +1058,7 @@
                 }
             ],
             "description": "Provides a configuration for friendsofphp/php-cs-fixer, used within Refinery29.",
-            "time": "2016-05-27 16:44:27"
+            "time": "2016-05-31 13:24:02"
         },
         {
             "name": "refinery29/test-util",
