@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "96888ee112b41c7f27725f1e386fad44",
-    "content-hash": "12cb0bf6d5fa7c04b1a0a5aaedf33916",
+    "hash": "dada306f712ba6c8ee5afcf8923122d0",
+    "content-hash": "c15c2e20ea2f11993f7310cb88243c24",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1064,30 +1064,29 @@
         },
         {
             "name": "refinery29/test-util",
-            "version": "0.2.0",
+            "version": "0.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/refinery29/test-util.git",
-                "reference": "cc9ebf9b371de69def25d8ba51e588135196b290"
+                "reference": "a81600f3d51c85982e6980a0e6824acbfc0263f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/refinery29/test-util/zipball/cc9ebf9b371de69def25d8ba51e588135196b290",
-                "reference": "cc9ebf9b371de69def25d8ba51e588135196b290",
+                "url": "https://api.github.com/repos/refinery29/test-util/zipball/a81600f3d51c85982e6980a0e6824acbfc0263f0",
+                "reference": "a81600f3d51c85982e6980a0e6824acbfc0263f0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4"
+                "fzaninotto/faker": "^1.6.0",
+                "php": ">=5.5"
             },
             "require-dev": {
+                "beberlei/assert": "^2.5.0",
                 "codeclimate/php-test-reporter": "0.2.0",
-                "fabpot/php-cs-fixer": "2.0.*-dev",
-                "fzaninotto/faker": "^1.5",
-                "phpunit/phpunit": "^4.8.18",
-                "refinery29/php-cs-fixer-config": "0.2.2"
+                "phpunit/phpunit": "^4.8.18 || ^5.2.3",
+                "refinery29/php-cs-fixer-config": "0.4.11"
             },
             "suggest": {
-                "fzaninotto/faker": "If you want to make use of the Faker\\GeneratorTrait",
                 "phpunit/phpunit": "If you want to make use of the PHPUnit\\BuildsMocksTrait"
             },
             "type": "library",
@@ -1102,8 +1101,16 @@
             ],
             "authors": [
                 {
+                    "name": "Kayla Daniels",
+                    "email": "kayla.daniels@refinery29.com"
+                },
+                {
                     "name": "Andreas Möller",
                     "email": "andreas.moller@refinery29.com"
+                },
+                {
+                    "name": "R29 Product & Engineering",
+                    "email": "p.e@refinery29.com"
                 }
             ],
             "description": "Provides helpers for testing.",
@@ -1112,7 +1119,7 @@
                 "test",
                 "util"
             ],
-            "time": "2015-11-11 17:46:03"
+            "time": "2016-05-15 20:56:52"
         },
         {
             "name": "satooshi/php-coveralls",
