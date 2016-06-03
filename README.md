@@ -14,7 +14,7 @@ $ composer require refinery29/solr-annotations
 
 ## Contributing
 
-Please refer to [`CONTRIBUTING.md`](CONTRIBUTING.md).
+Please refer to [`CONTRIBUTING.md`](.github/CONTRIBUTING.md).
 
 ## License
 

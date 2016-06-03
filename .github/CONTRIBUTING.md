@@ -2,7 +2,7 @@
 
 We're using [Travis CI](https://travis-ci.com) as a continuous integration system.
  
-For details, see [`.travis.yml`](.travis.yml). 
+For details, see [`.travis.yml`](../.travis.yml). 
  
 ## Tests
 
@@ -33,7 +33,7 @@ to automatically fix coding standard violations.
 Run
 
 ```
-$ make it
+$ make
 ```
 
 to run both coding standards check and tests!
