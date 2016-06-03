@@ -2,13 +2,12 @@
   "name": "refinery29/solr-annotations",
   "description": "Annotations for Solr",
   "require": {
-    "beberlei/assert": "^2.3@dev",
-    "doctrine/annotations": "1.*"
+    "beberlei/assert": "^2.5.0",
+    "doctrine/annotations": "^1.2.7"
   },
   "require-dev": {
     "codeclimate/php-test-reporter": "^0.2.0",
-    "fzaninotto/faker": "^1.5",
-    "phpunit/phpunit": "^4.8",
+    "phpunit/phpunit": "^4.8.26",
     "refinery29/php-cs-fixer-config": "0.4.15",
     "refinery29/test-util": "0.4.3"
   },
@@ -20,6 +19,7 @@
     }
   ],
   "minimum-stability": "dev",
+  "prefer-stable": true,
   "autoload": {
     "psr-4": {
       "Refinery29\\SolrAnnotations\\": "src/"
