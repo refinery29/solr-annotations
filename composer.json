@@ -1,6 +1,15 @@
 {
   "name": "refinery29/solr-annotations",
   "description": "Annotations for Solr",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Kayla Daniels",
+      "email": "kayladnls@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
     "beberlei/assert": "^2.5.0",
     "doctrine/annotations": "^1.2.7"
@@ -11,15 +20,6 @@
     "refinery29/php-cs-fixer-config": "0.4.16",
     "refinery29/test-util": "0.4.3"
   },
-  "license": "proprietary",
-  "authors": [
-    {
-      "name": "Kayla Daniels",
-      "email": "kayladnls@gmail.com"
-    }
-  ],
-  "minimum-stability": "dev",
-  "prefer-stable": true,
   "autoload": {
     "psr-4": {
       "Refinery29\\SolrAnnotations\\": "src/"
