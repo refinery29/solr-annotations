@@ -47,6 +47,4 @@ after_success:
   - if [[ "$WITH_COVERAGE" == "true" && "$IS_MERGE_TO_MASTER" == "true" ]]; then vendor/bin/test-reporter --coverage-report=build/logs/clover.xml; fi
 
 notifications:
-  email:
-    on_success: change
-    on_failure: change
+  email: false
