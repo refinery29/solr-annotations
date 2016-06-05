@@ -20,7 +20,7 @@ class SchemaBuilderTest extends \PHPUnit_Framework_TestCase
 {
     use GeneratorTrait;
 
-    public function setup()
+    protected function setUp()
     {
         AnnotationRegistry::registerAutoloadNamespace('Refinery29/SolrAnnotations/Annotation');
     }
