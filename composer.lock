@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b9741fbae6ef11fed9b6c8548f505703",
-    "content-hash": "956dce8194e765f8ed09614b6c7a3d94",
+    "hash": "fe7ae9ff7dc3b4c1e04e78d143e6f75c",
+    "content-hash": "df23001ed31b1199ffdf1ee8f534b506",
     "packages": [
         {
             "name": "beberlei/assert",
-            "version": "v2.5",
+            "version": "v2.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/assert.git",
-                "reference": "91e2690c4ecc8a4e3e2d333430069f6a0c694a7a"
+                "reference": "8a9ad22f1220e47a6d174843e8abef08f5eac441"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beberlei/assert/zipball/91e2690c4ecc8a4e3e2d333430069f6a0c694a7a",
-                "reference": "91e2690c4ecc8a4e3e2d333430069f6a0c694a7a",
+                "url": "https://api.github.com/repos/beberlei/assert/zipball/8a9ad22f1220e47a6d174843e8abef08f5eac441",
+                "reference": "8a9ad22f1220e47a6d174843e8abef08f5eac441",
                 "shasum": ""
             },
             "require": {
@@ -58,7 +58,7 @@
                 "assertion",
                 "validation"
             ],
-            "time": "2016-03-22 14:34:51"
+            "time": "2016-06-20 12:01:28"
         },
         {
             "name": "doctrine/annotations",
