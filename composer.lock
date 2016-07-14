@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fe7ae9ff7dc3b4c1e04e78d143e6f75c",
-    "content-hash": "df23001ed31b1199ffdf1ee8f534b506",
+    "hash": "d46334864acbdc9529e12dc136b7ecc3",
+    "content-hash": "0cc65150d23d434eacf19022f95e940c",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1018,16 +1018,16 @@
         },
         {
             "name": "refinery29/php-cs-fixer-config",
-            "version": "0.4.16",
+            "version": "0.4.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/refinery29/php-cs-fixer-config.git",
-                "reference": "7dd3a4117f69300ba1c7ef69e9738f1bc1fdb312"
+                "reference": "661f282db4f10f8b047c68e2309228d9c1b2241b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/refinery29/php-cs-fixer-config/zipball/7dd3a4117f69300ba1c7ef69e9738f1bc1fdb312",
-                "reference": "7dd3a4117f69300ba1c7ef69e9738f1bc1fdb312",
+                "url": "https://api.github.com/repos/refinery29/php-cs-fixer-config/zipball/661f282db4f10f8b047c68e2309228d9c1b2241b",
+                "reference": "661f282db4f10f8b047c68e2309228d9c1b2241b",
                 "shasum": ""
             },
             "require": {
@@ -1035,8 +1035,8 @@
                 "php": "^5.5 || ^7.0"
             },
             "require-dev": {
-                "codeclimate/php-test-reporter": "0.3.0",
-                "phpunit/phpunit": "^4.8.24"
+                "codeclimate/php-test-reporter": "0.3.2",
+                "phpunit/phpunit": "^4.8.26"
             },
             "type": "library",
             "autoload": {
@@ -1055,7 +1055,7 @@
                 }
             ],
             "description": "Provides a configuration for friendsofphp/php-cs-fixer, used within Refinery29.",
-            "time": "2016-05-31 13:24:02"
+            "time": "2016-07-14 09:57:54"
         },
         {
             "name": "refinery29/test-util",
