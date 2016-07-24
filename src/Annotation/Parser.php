@@ -148,9 +148,6 @@ class Parser
         return array_merge($this->getProperties($class), $this->getExtraSchema($class));
     }
 
-    /**
-     *
-     */
     public static function registerAnnotations()
     {
         AnnotationRegistry::registerFile(__DIR__ . '/Field.php');
