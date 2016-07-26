@@ -15,7 +15,7 @@
   },
   "require": {
     "php": "^5.5 || ^7.0",
-    "beberlei/assert": "^2.5.1",
+    "beberlei/assert": "^2.6.2",
     "doctrine/annotations": "^1.2.7"
   },
   "require-dev": {
