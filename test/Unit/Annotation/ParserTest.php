@@ -9,6 +9,7 @@
 
 namespace Refinery29\SolrAnnotations\Test\Unit\Annotation;
 
+use Doctrine\Common\Annotations\Reader;
 use Refinery29\SolrAnnotations\Annotation\Parser;
 use Refinery29\SolrAnnotations\Test\Unit\Stub\AnnotatedClass;
 use Refinery29\SolrAnnotations\Test\Unit\Stub\NonAnnotatedClass;
@@ -36,5 +37,20 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $name = $parser->getDocumentName($refl);
 
         $this->assertSame($name, 'AnnotatedClassDocument');
+    }
+
+    public function testReaderCanAcceptReaderInterface()
+    {
+        $parser = new Parser($this->getReaderMock());
+
+        $this->assertInstanceOf(Parser::class, $parser);
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|Reader
+     */
+    private function getReaderMock()
+    {
+        return $this->getMock(Reader::class);
     }
 }
