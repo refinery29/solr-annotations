@@ -11,6 +11,7 @@ namespace Refinery29\SolrAnnotations\Annotation;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\Reader;
 use Refinery29\SolrAnnotations\Annotation\Document as DocumentAnnotation;
 use ReflectionClass;
 
@@ -21,14 +22,14 @@ use ReflectionClass;
 class Parser
 {
     /**
-     * @var AnnotationReader
+     * @var Reader
      */
     private $reader;
 
     /**
-     * @param AnnotationReader $reader
+     * @param Reader $reader
      */
-    public function __construct(AnnotationReader $reader = null)
+    public function __construct(Reader $reader = null)
     {
         self::registerAnnotations();
         $this->reader = $reader ?: new AnnotationReader();
