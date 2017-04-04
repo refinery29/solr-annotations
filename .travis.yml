@@ -35,6 +35,10 @@ before_install:
 install:
   - composer install --prefer-dist
 
+addons:
+  code_climate:
+      repo_token: 8487b107670fb9754d560d370b1c0f45e6bfeb1f49e2e14ac1e04d92f3f7098c
+
 before_script:
   - mkdir -p "$HOME/.php-cs-fixer"
   - mkdir -p build/logs
